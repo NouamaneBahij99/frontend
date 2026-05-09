@@ -15,6 +15,7 @@ import Archives from './pages/Archives';
 import Utilisateurs from './pages/Utilisateurs';
 import Organisation from './pages/Organisation';
 import Workflows from './pages/Workflows';
+import Services from './pages/Services';
 import Notifications from './pages/Notifications';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
@@ -43,6 +44,7 @@ const AppRoutes = () => (
       <Route path="utilisateurs" element={<AdminRoute><Utilisateurs /></AdminRoute>} />
       <Route path="parametres" element={<AdminRoute><Organisation /></AdminRoute>} />
       <Route path="organisation" element={<AdminRoute><Organisation /></AdminRoute>} />
+      <Route path="services" element={<AdminRoute><Services /></AdminRoute>} />
       <Route path="workflows" element={<AdminRoute><Workflows /></AdminRoute>} />
     </Route>
     <Route path="*" element={<Navigate to="/dashboard" replace />} />

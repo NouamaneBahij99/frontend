@@ -5,7 +5,7 @@ import {
   Divider, Tooltip, useMediaQuery, useTheme, InputBase, Menu, MenuItem
 } from '@mui/material';
 import {
-  Dashboard, Inbox, Send, Archive, People, Settings,
+  Dashboard, Inbox, Send, Archive, People, Settings, Business,
   Notifications, Search, Menu as MenuIcon, ExitToApp, Person
 } from '@mui/icons-material';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
@@ -19,6 +19,8 @@ const menuItems = [
   { text: 'Courrier sortant', icon: <Send />, path: '/courriers/sortant' },
   { text: 'Archives', icon: <Archive />, path: '/archives' },
   { text: 'Utilisateurs', icon: <People />, path: '/utilisateurs', adminOnly: true },
+  { text: 'Services', icon: <Business />, path: '/services', adminOnly: true },
+  { text: 'Services', icon: <Business />, path: '/services', adminOnly: true },
   { text: 'Paramètres', icon: <Settings />, path: '/parametres', adminOnly: true },
 ];
 

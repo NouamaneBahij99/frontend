@@ -107,7 +107,7 @@ const CourrierEntrant = () => {
           <Table size="small">
             <TableHead>
               <TableRow>
-                {['N°', 'Date réception', 'Expéditeur', 'Objet', 'Service', 'Statut', 'Action'].map(h => (
+                {['N°', 'Date réception', 'Expéditeur', 'Objet', 'Étape', 'Statut', 'Action'].map(h => (
                   <TableCell key={h}>{h}</TableCell>
                 ))}
               </TableRow>
