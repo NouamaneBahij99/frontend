@@ -59,11 +59,15 @@ const Archives = () => {
 
   const handleDownloadPdf = async (id: number) => {
     try {
-      const res = await courrierService.getPdf(id);
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-      const a = document.createElement('a'); a.href = url;
-      a.download = 'courrier-' + id + '.pdf'; a.click();
-    } catch { toast.error('Erreur PDF'); }
+      await courrierService.downloadPdf(
+        id,
+        `courrier-${String(id).padStart(5,'0')}.pdf`
+      );
+      toast.success('PDF téléchargé !');
+    } catch (err: any) {
+      console.error('PDF error:', err);
+      toast.error('Erreur téléchargement PDF');
+    }
   };
 
   if (loading) return (

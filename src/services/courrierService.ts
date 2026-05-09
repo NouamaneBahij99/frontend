@@ -7,7 +7,8 @@ export const courrierService = {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
   update: (id: number, data: any) => api.put(`/courriers/${id}`, data),
-  affecter: (id: number, userId: number) => api.put(`/courriers/${id}/affecter/${userId}`),
+  affecter: (id: number, userId: number) =>
+    api.put(`/courriers/${id}/affecter/${userId}`),
   transferer: (id: number, userId: number, commentaire?: string) =>
     api.put(`/courriers/${id}/transferer/${userId}`, null, { params: { commentaire } }),
   valider: (id: number, commentaire?: string) =>
@@ -17,7 +18,26 @@ export const courrierService = {
   archiver: (id: number) => api.put(`/courriers/${id}/archiver`),
   getCircuit: (id: number) => api.get(`/courriers/${id}/circuit`),
   getHistorique: (id: number) => api.get(`/courriers/${id}/historique`),
-  getPdf: (id: number) => api.get(`/courriers/${id}/pdf`, { responseType: 'blob' }),
+  getPdf: (id: number) => api.get(`/courriers/${id}/pdf`, {
+    responseType: 'blob',
+    headers: {
+      'Accept': 'application/pdf'
+    }
+  }),
+  downloadPdf: async (id: number, filename?: string) => {
+    const response = await api.get(`/courriers/${id}/pdf`, {
+      responseType: 'blob',
+      headers: { 'Accept': 'application/pdf' }
+    });
+    const url = window.URL.createObjectURL(
+      new Blob([response.data], { type: 'application/pdf' })
+    );
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename || `courrier-${id}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  },
 };
-
-// Déjà dans le fichier, vérifier et ajouter si manquant

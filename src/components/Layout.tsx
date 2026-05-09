@@ -6,7 +6,8 @@ import {
 } from '@mui/material';
 import {
   Dashboard, Inbox, Send, Archive, People, Settings, Business,
-  Notifications, Search, Menu as MenuIcon, ExitToApp, Person
+  Notifications, Search, Menu as MenuIcon, ExitToApp, Person,
+  AccountTree
 } from '@mui/icons-material';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -20,7 +21,7 @@ const menuItems = [
   { text: 'Archives', icon: <Archive />, path: '/archives' },
   { text: 'Utilisateurs', icon: <People />, path: '/utilisateurs', adminOnly: true },
   { text: 'Services', icon: <Business />, path: '/services', adminOnly: true },
-  { text: 'Services', icon: <Business />, path: '/services', adminOnly: true },
+  { text: 'Workflows', icon: <AccountTree />, path: '/workflows', adminOnly: true },
   { text: 'Paramètres', icon: <Settings />, path: '/parametres', adminOnly: true },
 ];
 
@@ -66,29 +67,45 @@ const Layout = () => {
                 bgcolor: active ? 'rgba(255,255,255,0.15)' : 'transparent',
                 '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
               }}>
-              <ListItemIcon sx={{ color: active ? 'white' : 'rgba(255,255,255,0.6)', minWidth: 36, '& svg': { fontSize: 18 } }}>
+              <ListItemIcon sx={{
+                color: active ? 'white' : 'rgba(255,255,255,0.6)',
+                minWidth: 36, '& svg': { fontSize: 18 }
+              }}>
                 {item.icon}
               </ListItemIcon>
               <ListItemText primary={item.text}
-                primaryTypographyProps={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? 'white' : 'rgba(255,255,255,0.7)' }} />
+                primaryTypographyProps={{
+                  fontSize: 13,
+                  fontWeight: active ? 600 : 400,
+                  color: active ? 'white' : 'rgba(255,255,255,0.7)'
+                }} />
             </ListItemButton>
           );
         })}
       </List>
 
       <Box sx={{ p: 1.5 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, p: 1.5, borderRadius: 2, bgcolor: 'rgba(255,255,255,0.08)' }}>
+        <Box sx={{
+          display: 'flex', alignItems: 'center', gap: 1.2,
+          p: 1.5, borderRadius: 2, bgcolor: 'rgba(255,255,255,0.08)'
+        }}>
           <Avatar sx={{ width: 30, height: 30, bgcolor: '#7C3AED', fontSize: 11 }}>
             {user?.prenom?.[0]}{user?.nom?.[0]}
           </Avatar>
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography sx={{ fontSize: 12, fontWeight: 600, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <Typography sx={{
+              fontSize: 12, fontWeight: 600, color: 'white',
+              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
+            }}>
               {user?.prenom} {user?.nom}
             </Typography>
-            <Typography sx={{ fontSize: 10, color: 'rgba(255,255,255,0.6)' }}>{user?.role}</Typography>
+            <Typography sx={{ fontSize: 10, color: 'rgba(255,255,255,0.6)' }}>
+              {user?.role}
+            </Typography>
           </Box>
           <Tooltip title="Déconnexion">
-            <IconButton size="small" onClick={logout} sx={{ color: 'rgba(255,255,255,0.6)', '&:hover': { color: 'white' } }}>
+            <IconButton size="small" onClick={logout}
+              sx={{ color: 'rgba(255,255,255,0.6)', '&:hover': { color: 'white' } }}>
               <ExitToApp sx={{ fontSize: 16 }} />
             </IconButton>
           </Tooltip>
@@ -101,13 +118,19 @@ const Layout = () => {
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F1F5F9' }}>
       {!isMobile && (
         <Drawer variant="permanent"
-          sx={{ width: DRAWER_WIDTH, flexShrink: 0,
-            '& .MuiDrawer-paper': { width: DRAWER_WIDTH, border: 'none', boxShadow: '2px 0 8px rgba(0,0,0,0.1)' } }}>
+          sx={{
+            width: DRAWER_WIDTH, flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: DRAWER_WIDTH, border: 'none',
+              boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
+            }
+          }}>
           {sidebarContent}
         </Drawer>
       )}
       {isMobile && (
-        <Drawer variant="temporary" open={mobileOpen} onClose={() => setMobileOpen(false)}
+        <Drawer variant="temporary" open={mobileOpen}
+          onClose={() => setMobileOpen(false)}
           sx={{ '& .MuiDrawer-paper': { width: DRAWER_WIDTH, border: 'none' } }}>
           {sidebarContent}
         </Drawer>
@@ -154,7 +177,8 @@ const Layout = () => {
           </Toolbar>
         </AppBar>
 
-        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)}
+          onClose={() => setAnchorEl(null)}>
           <MenuItem onClick={() => { navigate('/profil'); setAnchorEl(null); }}>
             <Person sx={{ mr: 1, fontSize: 16 }} /> Mon profil
           </MenuItem>

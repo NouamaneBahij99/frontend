@@ -3,7 +3,7 @@ import {
   Box, Card, Typography, Button, Table, TableBody,
   TableCell, TableContainer, TableHead, TableRow,
   Chip, IconButton, Dialog, DialogTitle, DialogContent,
-  DialogActions, TextField, Alert, Tooltip, Avatar
+  DialogActions, TextField, Alert, Tooltip
 } from '@mui/material';
 import { Add, Edit, Delete, Business } from '@mui/icons-material';
 import { organisationService } from '../services/otherServices';
