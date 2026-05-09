@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import {
   Box, Drawer, AppBar, Toolbar, Typography, List, ListItemButton,
-  ListItemIcon, ListItemText, IconButton, Avatar, Menu, MenuItem,
-  Badge, Divider, Tooltip, useMediaQuery, useTheme
+  ListItemIcon, ListItemText, IconButton, Avatar, Badge,
+  Divider, Tooltip, useMediaQuery, useTheme, InputBase, Menu, MenuItem
 } from '@mui/material';
 import {
-  Dashboard, Mail, People, AccountTree, Settings,
-  Notifications, Menu as MenuIcon, ChevronLeft,
-  ExitToApp, Person, Archive
+  Dashboard, Inbox, Send, Archive, People, Settings,
+  Notifications, Search, Menu as MenuIcon, ExitToApp, Person
 } from '@mui/icons-material';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const DRAWER_WIDTH = 260;
+const DRAWER_WIDTH = 220;
 
 const menuItems = [
-  { text: 'Tableau de bord', icon: <Dashboard />, path: '/dashboard' },
-  { text: 'Courriers', icon: <Mail />, path: '/courriers' },
+  { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
+  { text: 'Courrier entrant', icon: <Inbox />, path: '/courriers/entrant' },
+  { text: 'Courrier sortant', icon: <Send />, path: '/courriers/sortant' },
+  { text: 'Archives', icon: <Archive />, path: '/archives' },
   { text: 'Utilisateurs', icon: <People />, path: '/utilisateurs', adminOnly: true },
-  { text: 'Organigramme', icon: <AccountTree />, path: '/organisation', adminOnly: true },
-  { text: 'Workflows', icon: <Settings />, path: '/workflows', adminOnly: true },
+  { text: 'Paramètres', icon: <Settings />, path: '/parametres', adminOnly: true },
 ];
 
 const Layout = () => {
-  const [open, setOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
@@ -33,124 +33,134 @@ const Layout = () => {
 
   const filteredMenu = menuItems.filter(item => !item.adminOnly || isAdmin());
 
+  const sidebarContent = (
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#2D1B6B' }}>
+      <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box sx={{
+          width: 36, height: 36, borderRadius: 2,
+          background: 'rgba(255,255,255,0.2)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18
+        }}>✉️</Box>
+        <Box>
+          <Typography sx={{ fontWeight: 800, fontSize: 14, color: 'white', lineHeight: 1.2 }}>
+            Sama Courrier
+          </Typography>
+          <Typography sx={{ fontSize: 10, color: 'rgba(255,255,255,0.6)' }}>
+            by magentatechno
+          </Typography>
+        </Box>
+      </Box>
+
+      <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)', mx: 1.5 }} />
+
+      <List sx={{ px: 1, py: 1.5, flex: 1 }}>
+        {filteredMenu.map((item) => {
+          const active = location.pathname.startsWith(item.path);
+          return (
+            <ListItemButton key={item.path}
+              onClick={() => { navigate(item.path); setMobileOpen(false); }}
+              sx={{
+                borderRadius: 2, mb: 0.3, py: 1,
+                bgcolor: active ? 'rgba(255,255,255,0.15)' : 'transparent',
+                '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+              }}>
+              <ListItemIcon sx={{ color: active ? 'white' : 'rgba(255,255,255,0.6)', minWidth: 36, '& svg': { fontSize: 18 } }}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.text}
+                primaryTypographyProps={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? 'white' : 'rgba(255,255,255,0.7)' }} />
+            </ListItemButton>
+          );
+        })}
+      </List>
+
+      <Box sx={{ p: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2, p: 1.5, borderRadius: 2, bgcolor: 'rgba(255,255,255,0.08)' }}>
+          <Avatar sx={{ width: 30, height: 30, bgcolor: '#7C3AED', fontSize: 11 }}>
+            {user?.prenom?.[0]}{user?.nom?.[0]}
+          </Avatar>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Typography sx={{ fontSize: 12, fontWeight: 600, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {user?.prenom} {user?.nom}
+            </Typography>
+            <Typography sx={{ fontSize: 10, color: 'rgba(255,255,255,0.6)' }}>{user?.role}</Typography>
+          </Box>
+          <Tooltip title="Déconnexion">
+            <IconButton size="small" onClick={logout} sx={{ color: 'rgba(255,255,255,0.6)', '&:hover': { color: 'white' } }}>
+              <ExitToApp sx={{ fontSize: 16 }} />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
+    </Box>
+  );
+
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8FAFC' }}>
-      {/* SIDEBAR */}
-      <Drawer
-        variant={isMobile ? 'temporary' : 'permanent'}
-        open={isMobile ? open : true}
-        onClose={() => setOpen(false)}
-        sx={{
-          width: DRAWER_WIDTH,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: DRAWER_WIDTH,
-            background: 'linear-gradient(180deg, #5B21B6 0%, #4C1D95 100%)',
-            color: 'white', border: 'none', boxShadow: '4px 0 15px rgba(0,0,0,0.1)'
-          }
-        }}
-      >
-        {/* Logo */}
-        <Box sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box sx={{
-            width: 42, height: 42, borderRadius: '50%',
-            background: 'rgba(255,255,255,0.2)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22
-          }}>🦩</Box>
-          <Box>
-            <Typography fontWeight={700} fontSize={18}>Pélican</Typography>
-            <Typography fontSize={11} sx={{ opacity: 0.7 }}>Gestion du Courrier</Typography>
-          </Box>
-        </Box>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F1F5F9' }}>
+      {!isMobile && (
+        <Drawer variant="permanent"
+          sx={{ width: DRAWER_WIDTH, flexShrink: 0,
+            '& .MuiDrawer-paper': { width: DRAWER_WIDTH, border: 'none', boxShadow: '2px 0 8px rgba(0,0,0,0.1)' } }}>
+          {sidebarContent}
+        </Drawer>
+      )}
+      {isMobile && (
+        <Drawer variant="temporary" open={mobileOpen} onClose={() => setMobileOpen(false)}
+          sx={{ '& .MuiDrawer-paper': { width: DRAWER_WIDTH, border: 'none' } }}>
+          {sidebarContent}
+        </Drawer>
+      )}
 
-        <Divider sx={{ borderColor: 'rgba(255,255,255,0.15)', mx: 2 }} />
-
-        {/* User info */}
-        <Box sx={{ px: 2, py: 2 }}>
-          <Box sx={{
-            display: 'flex', alignItems: 'center', gap: 1.5, p: 1.5,
-            borderRadius: 2, background: 'rgba(255,255,255,0.1)'
-          }}>
-            <Avatar sx={{ width: 36, height: 36, bgcolor: 'rgba(255,255,255,0.3)', fontSize: 14 }}>
-              {user?.prenom?.[0]}{user?.nom?.[0]}
-            </Avatar>
-            <Box>
-              <Typography fontSize={13} fontWeight={600}>{user?.prenom} {user?.nom}</Typography>
-              <Typography fontSize={11} sx={{ opacity: 0.7 }}>{user?.role}</Typography>
-            </Box>
-          </Box>
-        </Box>
-
-        {/* Navigation */}
-        <List sx={{ px: 1, flex: 1 }}>
-          {filteredMenu.map((item) => {
-            const active = location.pathname.startsWith(item.path);
-            return (
-              <ListItemButton
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                sx={{
-                  borderRadius: 2, mb: 0.5,
-                  background: active ? 'rgba(255,255,255,0.2)' : 'transparent',
-                  '&:hover': { background: 'rgba(255,255,255,0.15)' },
-                }}
-              >
-                <ListItemIcon sx={{ color: 'white', minWidth: 40 }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} primaryTypographyProps={{ fontSize: 14, fontWeight: active ? 600 : 400 }} />
-              </ListItemButton>
-            );
-          })}
-        </List>
-
-        {/* Logout */}
-        <Box sx={{ p: 2 }}>
-          <ListItemButton onClick={logout} sx={{ borderRadius: 2, '&:hover': { background: 'rgba(255,255,255,0.15)' } }}>
-            <ListItemIcon sx={{ color: 'white', minWidth: 40 }}><ExitToApp /></ListItemIcon>
-            <ListItemText primary="Déconnexion" primaryTypographyProps={{ fontSize: 14 }} />
-          </ListItemButton>
-        </Box>
-      </Drawer>
-
-      {/* MAIN */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* TOPBAR */}
-        <AppBar position="sticky" elevation={0} sx={{
-          bgcolor: 'white', borderBottom: '1px solid #E2E8F0', color: '#1e293b'
-        }}>
-          <Toolbar>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        <AppBar position="sticky" elevation={0}
+          sx={{ bgcolor: 'white', borderBottom: '1px solid #E2E8F0', color: '#1e293b' }}>
+          <Toolbar sx={{ gap: 2, minHeight: '56px !important' }}>
             {isMobile && (
-              <IconButton onClick={() => setOpen(!open)} sx={{ mr: 1 }}>
+              <IconButton size="small" onClick={() => setMobileOpen(true)}>
                 <MenuIcon />
               </IconButton>
             )}
-            <Typography fontWeight={600} sx={{ flex: 1 }}>
-              {filteredMenu.find(m => location.pathname.startsWith(m.path))?.text || 'Pélican'}
-            </Typography>
-
+            <Box sx={{
+              display: 'flex', alignItems: 'center', gap: 1,
+              bgcolor: '#F8FAFC', borderRadius: 2, px: 1.5, py: 0.5,
+              flex: 1, maxWidth: 320, border: '1px solid #E2E8F0'
+            }}>
+              <Search sx={{ fontSize: 16, color: '#94a3b8' }} />
+              <InputBase placeholder="Rechercher..." sx={{ fontSize: 13, flex: 1 }} />
+            </Box>
+            <Box sx={{ flex: 1 }} />
             <Tooltip title="Notifications">
-              <IconButton onClick={() => navigate('/notifications')}>
+              <IconButton size="small" onClick={() => navigate('/notifications')}
+                sx={{ bgcolor: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 2 }}>
                 <Badge badgeContent={3} color="error">
-                  <Notifications sx={{ color: '#64748b' }} />
+                  <Notifications sx={{ fontSize: 18, color: '#64748b' }} />
                 </Badge>
               </IconButton>
             </Tooltip>
-
-            <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} sx={{ ml: 1 }}>
-              <Avatar sx={{ width: 34, height: 34, bgcolor: '#5B21B6', fontSize: 13 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
+              onClick={(e) => setAnchorEl(e.currentTarget)}>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: '#5B21B6', fontSize: 12 }}>
                 {user?.prenom?.[0]}{user?.nom?.[0]}
               </Avatar>
-            </IconButton>
+              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Typography sx={{ fontSize: 12, fontWeight: 600, color: '#1e293b' }}>
+                  {user?.prenom} {user?.nom}
+                </Typography>
+                <Typography sx={{ fontSize: 11, color: '#64748b' }}>{user?.role}</Typography>
+              </Box>
+            </Box>
           </Toolbar>
         </AppBar>
 
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
           <MenuItem onClick={() => { navigate('/profil'); setAnchorEl(null); }}>
-            <Person sx={{ mr: 1 }} fontSize="small" /> Mon profil
+            <Person sx={{ mr: 1, fontSize: 16 }} /> Mon profil
           </MenuItem>
-          <MenuItem onClick={logout}><ExitToApp sx={{ mr: 1 }} fontSize="small" /> Déconnexion</MenuItem>
+          <MenuItem onClick={logout}>
+            <ExitToApp sx={{ mr: 1, fontSize: 16 }} /> Déconnexion
+          </MenuItem>
         </Menu>
 
-        {/* PAGE CONTENT */}
         <Box sx={{ flex: 1, p: 3, overflow: 'auto' }}>
           <Outlet />
         </Box>

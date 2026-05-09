@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
   Box, Card, CardContent, TextField, Button, Typography,
-  Alert, InputAdornment, IconButton, CircularProgress
+  Alert, Checkbox, FormControlLabel, InputAdornment,
+  IconButton, CircularProgress, Link
 } from '@mui/material';
-import { Visibility, VisibilityOff, Email, Lock } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +13,7 @@ import toast from 'react-hot-toast';
 const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+  const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
@@ -23,78 +25,143 @@ const Login = () => {
     try {
       const res = await authService.login(form);
       login({ ...res, accessToken: res.accessToken });
-      toast.success(`Bienvenue ${res.prenom} !`);
+      toast.success('Bienvenue ' + res.prenom + ' !');
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Email ou mot de passe incorrect');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
   return (
     <Box sx={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center',
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #5B21B6 0%, #7C3AED 50%, #4F46E5 100%)'
+      minHeight: '100vh', display: 'flex',
+      alignItems: 'center', justifyContent: 'center',
+      background: 'linear-gradient(135deg, #F1F5F9 0%, #E8EAF6 100%)'
     }}>
-      <Card sx={{ width: 420, borderRadius: 3, boxShadow: '0 25px 50px rgba(0,0,0,0.25)' }}>
+      <Card sx={{ width: 400, borderRadius: 3, boxShadow: '0 8px 32px rgba(91,33,182,0.12)' }}>
         <CardContent sx={{ p: 4 }}>
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Box sx={{
-              width: 64, height: 64, borderRadius: '50%', mx: 'auto', mb: 2,
-              background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
+              display: 'flex', alignItems: 'center',
+              justifyContent: 'center', gap: 1.5, mb: 1
             }}>
-              <Typography sx={{ fontSize: 28 }}>🦩</Typography>
+              <Box sx={{
+                width: 44, height: 44, borderRadius: 2,
+                background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <Typography sx={{ fontSize: 22 }}>✉️</Typography>
+              </Box>
+              <Box>
+                <Typography sx={{ fontWeight: 800, fontSize: 20, color: '#1e293b', lineHeight: 1.1 }}>
+                  Sama Courrier
+                </Typography>
+                <Typography sx={{ fontSize: 11, color: '#5B21B6', fontWeight: 500 }}>
+                  by magentatechno
+                </Typography>
+              </Box>
             </Box>
-            <Typography variant="h5" fontWeight={700} color="#1e293b">
-              Pélican
-            </Typography>
-            <Typography variant="body2" color="text.secondary" mt={0.5}>
-              Gestion Électronique du Courrier
+            <Typography sx={{ fontSize: 13, color: '#64748b', mt: 1 }}>
+              Connectez-vous à votre compte
             </Typography>
           </Box>
 
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>{error}</Alert>
+          )}
 
           <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth label="Email" type="email" value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-              sx={{ mb: 2 }} required
-              InputProps={{
-                startAdornment: <InputAdornment position="start"><Email color="action" /></InputAdornment>
-              }}
-            />
-            <TextField
-              fullWidth label="Mot de passe" value={form.password}
-              type={showPassword ? 'text' : 'password'}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              sx={{ mb: 3 }} required
-              InputProps={{
-                startAdornment: <InputAdornment position="start"><Lock color="action" /></InputAdornment>,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                )
-              }}
-            />
-            <Button
-              type="submit" fullWidth variant="contained" size="large"
-              disabled={loading}
+            <Box sx={{ mb: 2 }}>
+              <Typography sx={{ fontSize: 13, fontWeight: 500, mb: 0.5, color: '#374151' }}>
+                Email
+              </Typography>
+              <TextField fullWidth size="small" type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="Email" required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography sx={{ fontSize: 16 }}>📧</Typography>
+                    </InputAdornment>
+                  )
+                }}
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+              />
+            </Box>
+
+            <Box sx={{ mb: 2 }}>
+              <Typography sx={{ fontSize: 13, fontWeight: 500, mb: 0.5, color: '#374151' }}>
+                Mot de passe
+              </Typography>
+              <TextField fullWidth size="small"
+                value={form.password}
+                type={showPassword ? 'text' : 'password'}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                placeholder="Mot de passe" required
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography sx={{ fontSize: 16 }}>🔒</Typography>
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton size="small"
+                        onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword
+                          ? <VisibilityOff fontSize="small" />
+                          : <Visibility fontSize="small" />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
+              />
+            </Box>
+
+            <Box sx={{
+              display: 'flex', justifyContent: 'space-between',
+              alignItems: 'center', mb: 3
+            }}>
+              <FormControlLabel
+                control={
+                  <Checkbox size="small" checked={remember}
+                    onChange={e => setRemember(e.target.checked)}
+                    sx={{ color: '#5B21B6', '&.Mui-checked': { color: '#5B21B6' } }}
+                  />
+                }
+                label={
+                  <Typography sx={{ fontSize: 12, color: '#64748b' }}>
+                    Se souvenir de moi
+                  </Typography>
+                }
+              />
+              <Link href="#" sx={{
+                fontSize: 12, color: '#5B21B6',
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' }
+              }}>
+                Mot de passe oublié ?
+              </Link>
+            </Box>
+
+            <Button type="submit" fullWidth variant="contained"
+              size="large" disabled={loading}
               sx={{
-                py: 1.5, borderRadius: 2, textTransform: 'none', fontWeight: 600,
+                py: 1.3, borderRadius: 2, fontWeight: 600,
                 background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
                 '&:hover': { background: 'linear-gradient(135deg, #4C1D95, #6D28D9)' }
-              }}
-            >
-              {loading ? <CircularProgress size={24} color="inherit" /> : 'Se connecter'}
+              }}>
+              {loading
+                ? <CircularProgress size={20} color="inherit" />
+                : 'Se connecter'}
             </Button>
           </form>
+
+          <Typography sx={{ textAlign: 'center', mt: 3, fontSize: 11, color: '#94a3b8' }}>
+            © 2026 Sama Courrier · Tous droits réservés
+          </Typography>
         </CardContent>
       </Card>
     </Box>

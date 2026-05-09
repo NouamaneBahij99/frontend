@@ -19,3 +19,5 @@ export const courrierService = {
   getHistorique: (id: number) => api.get(`/courriers/${id}/historique`),
   getPdf: (id: number) => api.get(`/courriers/${id}/pdf`, { responseType: 'blob' }),
 };
+
+// Déjà dans le fichier, vérifier et ajouter si manquant

@@ -15,6 +15,13 @@ import 'dayjs/locale/fr';
 dayjs.extend(relativeTime);
 dayjs.locale('fr');
 
+const typeColors: Record<string, any> = {
+  COURRIER_ASSIGNE: 'primary',
+  COURRIER_VALIDE: 'success',
+  COURRIER_REJETE: 'error',
+  COURRIER_TRANSFERE: 'warning'
+};
+
 const Notifications = () => {
   const [notifs, setNotifs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +35,7 @@ const Notifications = () => {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchNotifs(); }, []);
+  useEffect(() => { fetchNotifs(); }, []); // eslint-disable-line
 
   const handleMarkRead = async (id: number) => {
     try {
@@ -41,12 +48,7 @@ const Notifications = () => {
     const unread = notifs.filter(n => !n.read);
     await Promise.all(unread.map(n => notificationService.markAsRead(n.id)));
     setNotifs(prev => prev.map(n => ({ ...n, read: true })));
-    toast.success('Toutes les notifications marquées comme lues');
-  };
-
-  const typeColors: Record<string, any> = {
-    COURRIER_ASSIGNE: 'primary', COURRIER_VALIDE: 'success',
-    COURRIER_REJETE: 'error', COURRIER_TRANSFERE: 'warning'
+    toast.success('Toutes les notifications lues');
   };
 
   const unreadCount = notifs.filter(n => !n.read).length;
@@ -59,56 +61,77 @@ const Notifications = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+      <Box sx={{
+        display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', mb: 3
+      }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="h5" fontWeight={700} color="#1e293b">Notifications</Typography>
-          {unreadCount > 0 && <Chip label={unreadCount} size="small" color="error" />}
+          <Typography variant="h5" sx={{ fontWeight: 700, color: '#1e293b' }}>
+            Notifications
+          </Typography>
+          {unreadCount > 0 && (
+            <Chip label={unreadCount} size="small" color="error" />
+          )}
         </Box>
         {unreadCount > 0 && (
           <Button startIcon={<MarkEmailRead />} onClick={handleMarkAllRead}
-            sx={{ textTransform: 'none', color: '#5B21B6' }}>
+            sx={{ textTransform: 'none', color: '#5B21B6', fontSize: 13 }}>
             Tout marquer comme lu
           </Button>
         )}
       </Box>
 
-      <Card sx={{ borderRadius: 3, boxShadow: '0 2px 10px rgba(0,0,0,0.06)' }}>
+      <Card sx={{ borderRadius: 3 }}>
         {notifs.length === 0 ? (
           <Box sx={{ py: 6, textAlign: 'center' }}>
             <NotifIcon sx={{ fontSize: 48, color: '#CBD5E1', mb: 1 }} />
-            <Typography color="text.secondary">Aucune notification</Typography>
+            <Typography sx={{ color: '#94a3b8', fontSize: 13 }}>
+              Aucune notification
+            </Typography>
           </Box>
         ) : (
           <List disablePadding>
             {notifs.map((n, i) => (
               <React.Fragment key={n.id}>
                 <ListItem
-                  sx={{ px: 3, py: 2, bgcolor: n.read ? 'transparent' : '#F5F3FF',
-                    cursor: 'pointer', '&:hover': { bgcolor: '#F8FAFC' } }}
+                  sx={{
+                    px: 3, py: 2,
+                    bgcolor: n.read ? 'transparent' : '#F5F3FF',
+                    cursor: 'pointer',
+                    '&:hover': { bgcolor: '#F8FAFC' }
+                  }}
                   onClick={() => { if (n.lien) navigate(n.lien); }}
                   secondaryAction={
                     !n.read && (
-                      <IconButton size="small" onClick={(e) => { e.stopPropagation(); handleMarkRead(n.id); }}>
-                        <MarkEmailRead fontSize="small" sx={{ color: '#5B21B6' }} />
+                      <IconButton size="small"
+                        onClick={(e) => { e.stopPropagation(); handleMarkRead(n.id); }}>
+                        <MarkEmailRead sx={{ fontSize: 16, color: '#5B21B6' }} />
                       </IconButton>
                     )
-                  }
-                >
+                  }>
                   <ListItemIcon sx={{ minWidth: 36 }}>
                     <Circle sx={{ fontSize: 10, color: n.read ? '#CBD5E1' : '#5B21B6' }} />
                   </ListItemIcon>
                   <ListItemText
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Typography fontSize={14} fontWeight={n.read ? 400 : 600}>{n.titre}</Typography>
-                        <Chip label={n.type?.replace('_', ' ')} size="small"
-                          color={typeColors[n.type] || 'default'} sx={{ fontSize: 10, height: 18 }} />
+                        <Typography sx={{ fontSize: 13, fontWeight: n.read ? 400 : 600 }}>
+                          {n.titre}
+                        </Typography>
+                        <Chip
+                          label={n.type?.replace(/_/g, ' ')}
+                          size="small"
+                          color={typeColors[n.type] || 'default'}
+                          sx={{ fontSize: 10, height: 18 }}
+                        />
                       </Box>
                     }
                     secondary={
                       <Box>
-                        <Typography fontSize={12} color="text.secondary">{n.message}</Typography>
-                        <Typography fontSize={11} color="text.secondary" mt={0.3}>
+                        <Typography sx={{ fontSize: 12, color: '#64748b' }}>
+                          {n.message}
+                        </Typography>
+                        <Typography sx={{ fontSize: 11, color: '#94a3b8', mt: 0.3 }}>
                           {dayjs(n.createdAt).fromNow()}
                         </Typography>
                       </Box>
