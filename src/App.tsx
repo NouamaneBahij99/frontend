@@ -14,6 +14,7 @@ import DetailCourrier from './pages/DetailCourrier';
 import Archives from './pages/Archives';
 import Utilisateurs from './pages/Utilisateurs';
 import Organisation from './pages/Organisation';
+import Parametres from './pages/Parametres';
 import Workflows from './pages/Workflows';
 import Services from './pages/Services';
 import Notifications from './pages/Notifications';
@@ -42,7 +43,7 @@ const AppRoutes = () => (
       <Route path="archives" element={<Archives />} />
       <Route path="notifications" element={<Notifications />} />
       <Route path="utilisateurs" element={<AdminRoute><Utilisateurs /></AdminRoute>} />
-      <Route path="parametres" element={<AdminRoute><Organisation /></AdminRoute>} />
+      <Route path="parametres" element={<AdminRoute><Parametres /></AdminRoute>} />
       <Route path="organisation" element={<AdminRoute><Organisation /></AdminRoute>} />
       <Route path="services" element={<AdminRoute><Services /></AdminRoute>} />
       <Route path="workflows" element={<AdminRoute><Workflows /></AdminRoute>} />
