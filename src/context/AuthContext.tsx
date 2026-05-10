@@ -1,13 +1,17 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
-  userId: number; email: string; role: string;
-  nom: string; prenom: string; accessToken: string;
+  userId: number;
+  email: string;
+  role: string;
+  nom: string;
+  prenom: string;
+  accessToken: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (userData: User) => void;
+  login: (userData: any) => void;
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: () => boolean;
@@ -22,10 +26,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return stored ? JSON.parse(stored) : null;
   });
 
-  const login = (userData: User) => {
-    localStorage.setItem('user', JSON.stringify(userData));
+  const login = (userData: any) => {
+    const userToStore = {
+      userId: userData.userId,
+      email: userData.email,
+      role: userData.role,
+      nom: userData.nom,
+      prenom: userData.prenom,
+      accessToken: userData.accessToken,
+    };
+    localStorage.setItem('user', JSON.stringify(userToStore));
     localStorage.setItem('accessToken', userData.accessToken);
-    setUser(userData);
+    localStorage.setItem('refreshToken', userData.refreshToken || '');
+    setUser(userToStore);
   };
 
   const logout = () => {
@@ -38,7 +51,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isChef = () => ['ADMIN', 'CHEF_SERVICE', 'DIRECTEUR'].includes(user?.role || '');
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, isAdmin, isChef }}>
+    <AuthContext.Provider value={{
+      user, login, logout,
+      isAuthenticated: !!user,
+      isAdmin, isChef
+    }}>
       {children}
     </AuthContext.Provider>
   );
