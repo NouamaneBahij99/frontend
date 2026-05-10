@@ -11,6 +11,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useAppTheme } from '../context/ThemeContext';
 
 const DRAWER_WIDTH = 220;
 
@@ -29,6 +30,7 @@ const Layout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, logout, isAdmin } = useAuth();
+  const { t } = useAppTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();

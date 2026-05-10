@@ -1,8 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
 import { Toaster } from 'react-hot-toast';
-import { theme } from './styles/theme';
+import { AppThemeProvider } from './context/ThemeContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Login from './pages/Login';
@@ -13,11 +12,11 @@ import NouveauCourrier from './pages/NouveauCourrier';
 import DetailCourrier from './pages/DetailCourrier';
 import Archives from './pages/Archives';
 import Utilisateurs from './pages/Utilisateurs';
-import Organisation from './pages/Organisation';
-import Parametres from './pages/Parametres';
-import Workflows from './pages/Workflows';
 import Services from './pages/Services';
+import Organisation from './pages/Organisation';
+import Workflows from './pages/Workflows';
 import Notifications from './pages/Notifications';
+import Parametres from './pages/Parametres';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated } = useAuth();
@@ -43,10 +42,10 @@ const AppRoutes = () => (
       <Route path="archives" element={<Archives />} />
       <Route path="notifications" element={<Notifications />} />
       <Route path="utilisateurs" element={<AdminRoute><Utilisateurs /></AdminRoute>} />
-      <Route path="parametres" element={<AdminRoute><Parametres /></AdminRoute>} />
-      <Route path="organisation" element={<AdminRoute><Organisation /></AdminRoute>} />
       <Route path="services" element={<AdminRoute><Services /></AdminRoute>} />
       <Route path="workflows" element={<AdminRoute><Workflows /></AdminRoute>} />
+      <Route path="parametres" element={<Parametres />} />
+      <Route path="organisation" element={<AdminRoute><Organisation /></AdminRoute>} />
     </Route>
     <Route path="*" element={<Navigate to="/dashboard" replace />} />
   </Routes>
@@ -54,8 +53,7 @@ const AppRoutes = () => (
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <AppThemeProvider>
       <AuthProvider>
         <BrowserRouter>
           <AppRoutes />
@@ -64,7 +62,7 @@ function App() {
           style: { borderRadius: 8, fontFamily: 'Inter, sans-serif', fontSize: 13 }
         }} />
       </AuthProvider>
-    </ThemeProvider>
+    </AppThemeProvider>
   );
 }
 
