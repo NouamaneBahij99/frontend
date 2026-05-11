@@ -15,15 +15,15 @@ import { useAppTheme } from '../context/ThemeContext';
 
 const DRAWER_WIDTH = 220;
 
-const menuItems = [
-  { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
-  { text: 'Courrier entrant', icon: <Inbox />, path: '/courriers/entrant' },
-  { text: 'Courrier sortant', icon: <Send />, path: '/courriers/sortant' },
-  { text: 'Archives', icon: <Archive />, path: '/archives' },
-  { text: 'Utilisateurs', icon: <People />, path: '/utilisateurs', adminOnly: true },
-  { text: 'Services', icon: <Business />, path: '/services', adminOnly: true },
-  { text: 'Workflows', icon: <AccountTree />, path: '/workflows', adminOnly: true },
-  { text: 'Paramètres', icon: <Settings />, path: '/parametres', adminOnly: true },
+const MENU_KEYS = [
+  { key: 'dashboard',        icon: <Dashboard />,   path: '/dashboard' },
+  { key: 'courrier_entrant', icon: <Inbox />,        path: '/courriers/entrant' },
+  { key: 'courrier_sortant', icon: <Send />,         path: '/courriers/sortant' },
+  { key: 'archives',         icon: <Archive />,      path: '/archives' },
+  { key: 'utilisateurs',     icon: <People />,       path: '/utilisateurs',  adminOnly: true },
+  { key: 'services',         icon: <Business />,     path: '/services',      adminOnly: true },
+  { key: 'workflows',        icon: <AccountTree />,  path: '/workflows',     adminOnly: true },
+  { key: 'parametres',       icon: <Settings />,     path: '/parametres',    adminOnly: true },
 ];
 
 const Layout = () => {
@@ -36,7 +36,7 @@ const Layout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const filteredMenu = menuItems.filter(item => !item.adminOnly || isAdmin());
+  const filteredMenu = MENU_KEYS.filter(item => !item.adminOnly || isAdmin());
 
   const sidebarContent = (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#2D1B6B' }}>
@@ -75,7 +75,7 @@ const Layout = () => {
               }}>
                 {item.icon}
               </ListItemIcon>
-              <ListItemText primary={item.text}
+              <ListItemText primary={t(item.key)}
                 primaryTypographyProps={{
                   fontSize: 13,
                   fontWeight: active ? 600 : 400,
