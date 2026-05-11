@@ -32,7 +32,7 @@ const Workflows = () => {
   const handleCreate = async () => {
     setError('');
     try {
-      await workflowService.create({ ...form, etapes: [] });
+      await workflowService.create({ nom: form.nom, description: form.description, typeCourrier: form.typeCourrier, estParDefaut: form.defaut, etapes: [] });
       toast.success('Workflow créé');
       setOpenCreate(false);
       setForm({ nom: '', description: '', typeCourrier: '', defaut: false });
