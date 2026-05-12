@@ -21,13 +21,13 @@ const LANGUAGES = [
   { code: 'wo', label: 'Wolof', flag: '🇸🇳', native: 'Wolof' },
 ];
 
-const SECTIONS = [
-  { id: 'profil', label: t('mon_profil'), icon: <Person />, color: '#5B21B6' },
-  { id: 'apparence', label: t('apparence'), icon: <Palette />, color: '#7C3AED' },
-  { id: 'langue', label: t('langue'), icon: <Language />, color: '#3B82F6' },
-  { id: 'notifications', label: t('notifications'), icon: <Notifications />, color: '#F59E0B' },
-  { id: 'securite', label: t('securite'), icon: <Lock />, color: '#EF4444' },
-  { id: 'systeme', label: t('a_propos'), icon: <Info />, color: '#10B981' },
+const SECTION_KEYS = [
+  { id: 'profil',        key: 'mon_profil',    icon: 'Person',        color: '#5B21B6' },
+  { id: 'apparence',     key: 'apparence',     icon: 'Palette',       color: '#7C3AED' },
+  { id: 'langue',        key: 'langue',        icon: 'Language',      color: '#3B82F6' },
+  { id: 'notifications', key: 'notifications', icon: 'Notifications', color: '#F59E0B' },
+  { id: 'securite',      key: 'securite',      icon: 'Lock',          color: '#EF4444' },
+  { id: 'systeme',       key: 'a_propos',      icon: 'Info',          color: '#10B981' },
 ];
 
 const Parametres = () => {
@@ -535,7 +535,12 @@ const Parametres = () => {
                           color: isActive ? section.color : 'text.secondary'
                         }
                       }}>
-                        {section.icon}
+                        {section.icon === 'Person' ? <Person /> :
+                     section.icon === 'Palette' ? <Palette /> :
+                     section.icon === 'Language' ? <Language /> :
+                     section.icon === 'Notifications' ? <Notifications /> :
+                     section.icon === 'Lock' ? <Lock /> :
+                     <Info />}
                       </ListItemIcon>
                       <ListItemText
                         primary={t(section.key)}
