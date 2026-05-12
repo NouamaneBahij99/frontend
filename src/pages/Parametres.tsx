@@ -22,12 +22,12 @@ const LANGUAGES = [
 ];
 
 const SECTIONS = [
-  { id: 'profil', label: 'Mon profil', icon: <Person />, color: '#5B21B6' },
-  { id: 'apparence', label: 'Apparence', icon: <Palette />, color: '#7C3AED' },
-  { id: 'langue', label: 'Langue', icon: <Language />, color: '#3B82F6' },
-  { id: 'notifications', label: 'Notifications', icon: <Notifications />, color: '#F59E0B' },
-  { id: 'securite', label: 'Sécurité', icon: <Lock />, color: '#EF4444' },
-  { id: 'systeme', label: 'À propos', icon: <Info />, color: '#10B981' },
+  { id: 'profil', label: t('mon_profil'), icon: <Person />, color: '#5B21B6' },
+  { id: 'apparence', label: t('apparence'), icon: <Palette />, color: '#7C3AED' },
+  { id: 'langue', label: t('langue'), icon: <Language />, color: '#3B82F6' },
+  { id: 'notifications', label: t('notifications'), icon: <Notifications />, color: '#F59E0B' },
+  { id: 'securite', label: t('securite'), icon: <Lock />, color: '#EF4444' },
+  { id: 'systeme', label: t('a_propos'), icon: <Info />, color: '#10B981' },
 ];
 
 const Parametres = () => {

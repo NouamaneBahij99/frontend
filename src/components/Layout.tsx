@@ -13,7 +13,7 @@ import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAppTheme } from '../context/ThemeContext';
 
-const DRAWER_WIDTH = 220;
+const DRAWER_WIDTH = 260;
 
 const MENU_KEYS = [
   { key: 'dashboard',        icon: <Dashboard />,   path: '/dashboard' },
