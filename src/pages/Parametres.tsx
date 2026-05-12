@@ -502,7 +502,7 @@ const Parametres = () => {
     }
   };
 
-  const activeInfo = SECTIONS.find(s => s.id === activeSection);
+  const activeInfo = SECTION_KEYS.find(s => s.id === activeSection);
 
   return (
     <Box>
@@ -516,7 +516,7 @@ const Parametres = () => {
         <Card sx={{ width: 240, flexShrink: 0, position: 'sticky', top: 80 }}>
           <CardContent sx={{ p: 1.5 }}>
             <List disablePadding>
-              {SECTIONS.map((section, i) => {
+              {SECTION_KEYS.map((section, i) => {
                 const isActive = activeSection === section.id;
                 return (
                   <React.Fragment key={section.id}>
@@ -538,7 +538,7 @@ const Parametres = () => {
                         {section.icon}
                       </ListItemIcon>
                       <ListItemText
-                        primary={section.label}
+                        primary={t(section.key)}
                         primaryTypographyProps={{
                           fontSize: 13,
                           fontWeight: isActive ? 700 : 400,
@@ -563,7 +563,7 @@ const Parametres = () => {
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              {activeInfo?.label}
+              {t(activeInfo?.key || '')}
             </Typography>
             <Typography color="text.secondary" sx={{ fontSize: 13 }}>
               {activeSection === 'profil' && 'Gérez vos informations personnelles'}

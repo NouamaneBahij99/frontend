@@ -30,7 +30,7 @@ const Layout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, logout, isAdmin } = useAuth();
-  const { t } = useAppTheme();
+  const { t, langue } = useAppTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -117,7 +117,7 @@ const Layout = () => {
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F1F5F9' }}>
+    <Box sx={{ display: 'flex', direction: langue === 'ar' ? 'rtl' : 'ltr', minHeight: '100vh', bgcolor: '#F1F5F9' }}>
       {!isMobile && (
         <Drawer variant="permanent"
           sx={{
@@ -164,7 +164,7 @@ const Layout = () => {
                 </Badge>
               </IconButton>
             </Tooltip>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
+            <Box sx={{ display: 'flex', direction: langue === 'ar' ? 'rtl' : 'ltr', alignItems: 'center', gap: 1, cursor: 'pointer' }}
               onClick={(e) => setAnchorEl(e.currentTarget)}>
               <Avatar sx={{ width: 32, height: 32, bgcolor: '#5B21B6', fontSize: 12 }}>
                 {user?.prenom?.[0]}{user?.nom?.[0]}
