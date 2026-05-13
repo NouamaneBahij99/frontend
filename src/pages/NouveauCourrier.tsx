@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid';
 import { ArrowBack, AttachFile, Send } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { courrierService } from '../services/courrierService';
+import { organisationService } from '../services/otherServices';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 
@@ -23,6 +24,11 @@ const NouveauCourrier = () => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [services, setServices] = useState<any[]>([]);
+
+  useEffect(() => {
+    organisationService.getAll().then(r => setServices(r.data || [])).catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,12 +123,18 @@ const NouveauCourrier = () => {
                 <Typography sx={{ fontSize: 13, fontWeight: 500, mb: 0.5, color: '#374151' }}>
                   Service destinataire *
                 </Typography>
-                <TextField fullWidth size="small"
-                  value={form.destinataire}
-                  onChange={(e) => setForm({ ...form, destinataire: e.target.value })}
-                  placeholder="Sélectionner un service" required
-                  sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
-                />
+                <FormControl fullWidth size="small" required>
+                  <Select
+                    value={form.destinataire}
+                    onChange={(e) => setForm({ ...form, destinataire: e.target.value })}
+                    displayEmpty
+                    sx={{ borderRadius: 2 }}>
+                    <MenuItem value="" disabled>Sélectionner un service</MenuItem>
+                    {services.map((s: any) => (
+                      <MenuItem key={s.id} value={s.nom}>{s.nom}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
