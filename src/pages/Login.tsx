@@ -142,7 +142,11 @@ const Login = () => {
                 textDecoration: 'none',
                 '&:hover': { textDecoration: 'underline' }
               }}>
-                Mot de passe oublié ?
+                <span
+                  onClick={() => alert('Pour réinitialiser votre mot de passe, contactez votre administrateur : admin@pelican.sn')}
+                  style={{ cursor: 'pointer', color: '#5B21B6', fontSize: 13 }}>
+                  Mot de passe oublié ?
+                </span>
               </Link>
             </Box>
 
