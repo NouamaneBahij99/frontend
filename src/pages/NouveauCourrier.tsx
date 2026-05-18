@@ -40,8 +40,9 @@ const NouveauCourrier = () => {
       ));
       if (file) formData.append('file', file);
       const res = await courrierService.create(formData);
-      toast.success('Courrier ' + res.data.numero + ' créé !');
-      navigate('/courriers/' + res.data.id);
+      toast.success('Courrier ' + res.data.numero + ' créé avec succès !');
+      const target = isSortant ? '/courriers/sortant' : '/courriers/entrant';
+      setTimeout(() => navigate(target), 1500);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erreur lors de la création');
     } finally { setLoading(false); }

@@ -33,7 +33,8 @@ const CourrierSortant = () => {
     setLoading(true);
     try {
       const res = await courrierService.getAll({
-        search, type: 'SORTANT', statut, page, size: 10
+        search, type: 'SORTANT', statut, page, size: 10,
+        sort: 'createdAt,desc'
       });
       setCourriers(res.data.content || []);
       setTotal(res.data.totalElements || 0);
