@@ -18,6 +18,11 @@ api.interceptors.response.use(
   async (error) => {
     const original = error.config;
 
+    // Ne pas intercepter les appels de refresh eux-memes
+    if (original.url?.includes('/auth/refresh')) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !original._retry) {
       original._retry = true;
       try {
@@ -32,22 +37,27 @@ api.interceptors.response.use(
         const newToken = res.data.accessToken;
         localStorage.setItem('accessToken', newToken);
 
-        const user = JSON.parse(localStorage.getItem('user') || '{}');
-        user.accessToken = newToken;
-        localStorage.setItem('user', JSON.stringify(user));
+        const stored = localStorage.getItem('user');
+        if (stored) {
+          const user = JSON.parse(stored);
+          user.accessToken = newToken;
+          localStorage.setItem('user', JSON.stringify(user));
+        }
 
         original.headers.Authorization = `Bearer ${newToken}`;
         return api(original);
       } catch {
+        // Refresh echoue — deconnecter
         localStorage.clear();
         window.location.href = '/login';
       }
     }
 
+    // 403 = pas de permission sur cette ressource
+    // NE PAS deconnecter — juste rejeter l erreur
     if (error.response?.status === 403) {
-      console.warn('403 Forbidden - token expiré ou accès refusé');
-      localStorage.clear();
-      window.location.href = '/login';
+      console.warn('403 Forbidden - acces refuse pour cette ressource');
+      return Promise.reject(error);
     }
 
     return Promise.reject(error);
