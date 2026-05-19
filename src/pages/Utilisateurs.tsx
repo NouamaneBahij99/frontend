@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { Add, Edit, Delete, CheckCircle, Block } from '@mui/icons-material';
-import { userService } from '../services/otherServices';
+import { userService, organisationService } from '../services/otherServices';
 import { authService } from '../services/authService';
 import toast from 'react-hot-toast';
 
@@ -22,6 +22,7 @@ const roleColors: Record<string, any> = {
 
 const Utilisateurs = () => {
   const [users, setUsers] = useState<any[]>([]);
+  const [services, setServices] = useState<any[]>([]);
   const [openAdd, setOpenAdd] = useState(false);
   const [form, setForm] = useState({
     nom: '', prenom: '', email: '',
@@ -31,6 +32,7 @@ const Utilisateurs = () => {
 
   const fetchUsers = () =>
     userService.getAll().then(r => setUsers(r.data.content || r.data));
+    organisationService.getAll().then(r => setServices(r.data || [])).catch(() => {});
 
   useEffect(() => { fetchUsers(); }, []);
 
@@ -203,11 +205,19 @@ const Utilisateurs = () => {
               </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <TextField fullWidth size="small" label="Service"
-                value={form.service}
-                onChange={(e) => setForm({ ...form, service: e.target.value })}
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel>Service</InputLabel>
+                <Select
+                  value={form.service}
+                  label="Service"
+                  onChange={(e) => setForm({ ...form, service: e.target.value })}
+                  sx={{ borderRadius: 2 }}>
+                  <MenuItem value="">Aucun</MenuItem>
+                  {services.map((s: any) => (
+                    <MenuItem key={s.id} value={s.nom}>{s.nom}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
         </DialogContent>
