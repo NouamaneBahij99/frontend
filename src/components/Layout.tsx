@@ -1,3 +1,4 @@
+import logo from '../assets/logo.png';
 import React, { useState } from 'react';
 import {
   Box, Drawer, AppBar, Toolbar, Typography, List, ListItemButton,
@@ -42,16 +43,17 @@ const Layout = () => {
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#2D1B6B' }}>
       <Box sx={{ p: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
         <Box sx={{
-          width: 36, height: 36, borderRadius: 2,
-          background: 'rgba(255,255,255,0.2)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18
-        }}>✉️</Box>
+          width: 48, height: 48, borderRadius: 2,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <img src={logo} alt="Pelican" style={{ width: 44, height: 44, objectFit: 'contain' }} />
+        </Box>
         <Box>
           <Typography sx={{ fontWeight: 800, fontSize: 14, color: 'white', lineHeight: 1.2 }}>
-            Sama Courrier
+            Pélican
           </Typography>
           <Typography sx={{ fontSize: 10, color: 'rgba(255,255,255,0.6)' }}>
-            by magentatechno
+            by magentatech
           </Typography>
         </Box>
       </Box>

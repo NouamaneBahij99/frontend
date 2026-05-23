@@ -1,3 +1,4 @@
+import logo from '../assets/logo.png';
 import React, { useState } from 'react';
 import {
   Box, Card, CardContent, TextField, Button, Typography,
@@ -50,11 +51,11 @@ const Login = () => {
                 background: 'linear-gradient(135deg, #5B21B6, #7C3AED)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center'
               }}>
-                <Typography sx={{ fontSize: 22 }}>✉️</Typography>
+                <img src={logo} alt="Pelican" style={{ width: 52, height: 52, objectFit: 'contain' }} />
               </Box>
               <Box>
                 <Typography sx={{ fontWeight: 800, fontSize: 20, color: '#1e293b', lineHeight: 1.1 }}>
-                  Sama Courrier
+                  Pélican
                 </Typography>
                 <Typography sx={{ fontSize: 11, color: '#5B21B6', fontWeight: 500 }}>
                   by magentatechno
